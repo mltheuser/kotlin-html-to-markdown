@@ -20,7 +20,7 @@ For in-depth details on configuration, custom rules, and internal structures, pl
 Add the dependency to your `build.gradle.kts`:
 
 ```kotlin
-implementation("com.mltheuser:khtml-to-markdown:1.+")
+implementation("io.github.mltheuser:khtmltomarkdown:1.+")
 ```
 
 ### Basic Usage
