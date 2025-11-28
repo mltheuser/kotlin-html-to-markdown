@@ -3,8 +3,9 @@ plugins {
     alias(libs.plugins.vanniktech.publish)
 }
 
+val version: String = "1.0.0"
+
 group = "io.github.mltheuser"
-version = "0.0.1"
 
 repositories {
     mavenCentral()
@@ -47,7 +48,7 @@ mavenPublishing {
     
     signAllPublications()
     
-    coordinates("io.github.mltheuser", "khtmltomarkdown", "0.0.1")
+    coordinates("io.github.mltheuser", "khtmltomarkdown", version)
     
     pom {
         name.set("KHtmlToMarkdown")
