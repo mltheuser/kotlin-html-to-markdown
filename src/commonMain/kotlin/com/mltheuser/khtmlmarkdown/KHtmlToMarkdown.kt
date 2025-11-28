@@ -6,9 +6,20 @@ import com.mltheuser.khtmlmarkdown.registry.RuleRegistry
 import com.mltheuser.khtmlmarkdown.rules.*
 import com.mohamedrejeb.ksoup.html.parser.KsoupHtmlParser
 
+/**
+ * The main entry point for converting HTML to Markdown.
+ *
+ * Use the [Builder] to configure and create an instance of this class.
+ */
 public class KHtmlToMarkdown
 private constructor(private val registry: RuleRegistry, private val options: ConverterOptions) {
 
+    /**
+     * Converts the provided HTML string to Markdown.
+     *
+     * @param html The HTML string to convert.
+     * @return The generated Markdown string.
+     */
     public fun convert(html: String): String {
         val handler = DomBuildingHandler()
         val parser = KsoupHtmlParser(handler = handler)
@@ -34,7 +45,11 @@ private constructor(private val registry: RuleRegistry, private val options: Con
         return null
     }
 
-    /** Entry point for the DSL. */
+    /**
+     * Builder for creating [KHtmlToMarkdown] instances with custom configuration.
+     *
+     * It comes pre-configured with a set of default rules for standard HTML tags.
+     */
     public class Builder {
         private val registry = RuleRegistry()
         private var options = ConverterOptions()
@@ -78,7 +93,11 @@ private constructor(private val registry: RuleRegistry, private val options: Con
             registry.register("td", TableCellRule)
         }
 
-        /** Configure global options. */
+        /**
+         * Configures global conversion options.
+         *
+         * @param block A lambda to configure [OptionsBuilder].
+         */
         public fun options(block: OptionsBuilder.() -> Unit): Builder {
             val builder = OptionsBuilder(options)
             builder.block()
@@ -86,7 +105,12 @@ private constructor(private val registry: RuleRegistry, private val options: Con
             return this
         }
 
-        /** Add or replace a rule for a specific tag. */
+        /**
+         * Adds or replaces a rule for a specific HTML tag.
+         *
+         * @param tagName The tag name to handle (e.g., "div").
+         * @param handler A lambda that converts the element to a Markdown string.
+         */
         public fun rule(
                 tagName: String,
                 handler: (KElement, ConversionContext) -> String
@@ -98,20 +122,30 @@ private constructor(private val registry: RuleRegistry, private val options: Con
             return this
         }
 
-        /** Add or replace a rule using a class implementation. */
+        /**
+         * Adds or replaces a rule using a [ConversionRule] implementation.
+         *
+         * @param tagName The tag name to handle.
+         * @param rule The rule implementation.
+         */
         public fun rule(tagName: String, rule: ConversionRule): Builder {
             registry.register(tagName, rule)
             return this
         }
 
+        /** Builds the [KHtmlToMarkdown] instance. */
         public fun build(): KHtmlToMarkdown {
             return KHtmlToMarkdown(registry, options)
         }
     }
 
+    /** DSL builder for [ConverterOptions]. */
     public class OptionsBuilder(current: ConverterOptions) {
+        /** The character to use for unordered lists (e.g., "*", "-", "+"). */
         public var bulletCharacter: String = current.bulletCharacter
+        /** The delimiter to use for strong/bold text (e.g., "**", "__"). */
         public var strongDelimiter: String = current.strongDelimiter
+        /** The delimiter to use for emphasized/italic text (e.g., "*", "_"). */
         public var emDelimiter: String = current.emDelimiter
 
         internal fun build() =

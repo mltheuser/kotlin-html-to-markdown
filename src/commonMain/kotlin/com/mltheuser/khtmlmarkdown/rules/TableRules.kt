@@ -3,7 +3,11 @@ package com.mltheuser.khtmlmarkdown.rules
 import com.mltheuser.khtmlmarkdown.ConversionContext
 import com.mltheuser.khtmlmarkdown.dom.KElement
 
-// 1. Table Container
+/**
+ * Converts `<table>` tags to Markdown tables.
+ *
+ * Sets up the table context for child elements.
+ */
 public object TableRule : ConversionRule {
     override fun convert(element: KElement, context: ConversionContext): String {
         // Enter table context
@@ -14,15 +18,22 @@ public object TableRule : ConversionRule {
     }
 }
 
-// 2. Structural containers (thead, tbody, tfoot)
-// These are transparent but we ensure they don't break the flow.
+/**
+ * Handles structural table tags (`<thead>`, `<tbody>`, `<tfoot>`).
+ *
+ * These are transparently processed to render their children.
+ */
 public object TableSectionRule : ConversionRule {
     override fun convert(element: KElement, context: ConversionContext): String {
         return context.processChildren(element)
     }
 }
 
-// 3. Table Row (TR)
+/**
+ * Converts `<tr>` tags to Markdown table rows.
+ *
+ * Also handles the generation of the separator row (e.g., `|---|---|`) for the header.
+ */
 public object TrRule : ConversionRule {
     override fun convert(element: KElement, context: ConversionContext): String {
         val content = context.processChildren(element).trim()
@@ -36,14 +47,16 @@ public object TrRule : ConversionRule {
         // Separator Logic:
         // We need to add |---|---| if this row is a header.
         // Heuristic: If inside <thead> OR if children are <th>
-        val isHeader = element.parent?.tagName == "thead" ||
-                element.children.any { (it as? KElement)?.tagName == "th" }
+        val isHeader =
+                element.parent?.tagName == "thead" ||
+                        element.children.any { (it as? KElement)?.tagName == "th" }
 
         if (isHeader) {
             // Calculate columns based on actual Td/Th children processed
-            val colCount = element.children.count {
-                it is KElement && (it.tagName == "td" || it.tagName == "th")
-            }
+            val colCount =
+                    element.children.count {
+                        it is KElement && (it.tagName == "td" || it.tagName == "th")
+                    }
 
             if (colCount > 0) {
                 val separator = "|---".repeat(colCount) + "|"
@@ -55,7 +68,11 @@ public object TrRule : ConversionRule {
     }
 }
 
-// 4. Table Cell (TH/TD)
+/**
+ * Converts `<td>` and `<th>` tags to Markdown table cells.
+ *
+ * Appends a trailing pipe `|` to the content.
+ */
 public object TableCellRule : ConversionRule {
     override fun convert(element: KElement, context: ConversionContext): String {
         val content = context.processChildren(element).trim()

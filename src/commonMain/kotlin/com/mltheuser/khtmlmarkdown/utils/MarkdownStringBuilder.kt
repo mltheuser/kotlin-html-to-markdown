@@ -1,15 +1,33 @@
 package com.mltheuser.khtmlmarkdown.utils
 
+/**
+ * A specialized StringBuilder wrapper that handles Markdown-specific string building concerns.
+ *
+ * Primarily, it manages newline normalization to ensure that no more than two consecutive newlines
+ * (one blank line) are ever appended, maintaining clean Markdown output.
+ */
 internal class MarkdownStringBuilder {
     private val sb = StringBuilder()
 
+    /**
+     * Appends the given text to the builder, ensuring correct newline handling.
+     *
+     * @param text The text to append.
+     */
     fun append(text: String) {
         if (text.isEmpty()) return
         appendValidatingNewlines(text)
     }
 
+    /** Returns the accumulated string content. */
     override fun toString(): String = sb.toString()
 
+    /**
+     * Appends text while ensuring that the total number of consecutive newlines (trailing in buffer
+     * + leading in new text) does not exceed 2.
+     *
+     * @param text The text to append.
+     */
     private fun appendValidatingNewlines(text: String) {
         // Count trailing newlines in existing buffer
         var sbNewlines = 0

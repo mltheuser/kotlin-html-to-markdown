@@ -4,7 +4,15 @@ import com.mltheuser.khtmlmarkdown.ConversionContext
 import com.mltheuser.khtmlmarkdown.dom.KElement
 import com.mltheuser.khtmlmarkdown.dom.KTextNode
 
-// Helper for "<b> foo </b>" -> " **foo** "
+/**
+ * Helper function to wrap content with delimiters while ensuring valid whitespace handling.
+ *
+ * Markdown requires that delimiters (like `**` or `_`) are directly adjacent to the content they
+ * wrap, without intervening spaces. This function moves leading/trailing spaces outside the
+ * delimiters.
+ *
+ * Example: `<b> foo </b>` -> ` **foo** ` (instead of `** foo **`)
+ */
 private fun wrapWithValidWhitespace(content: String, delimiter: String): String {
     if (content.isEmpty()) return ""
 
@@ -28,7 +36,11 @@ private fun wrapWithValidWhitespace(content: String, delimiter: String): String 
     return "$prefix$delimiter$text$delimiter$suffix"
 }
 
-// 1. Bold: <b>, <strong>
+/**
+ * Converts `<b>` and `<strong>` tags to Markdown bold text.
+ *
+ * Uses the configured strong delimiter (default `**`).
+ */
 public object StrongRule : ConversionRule {
     override fun convert(element: KElement, context: ConversionContext): String {
         val content = context.processChildren(element)
@@ -36,7 +48,11 @@ public object StrongRule : ConversionRule {
     }
 }
 
-// 2. Italic: <i>, <em>
+/**
+ * Converts `<i>` and `<em>` tags to Markdown italic text.
+ *
+ * Uses the configured emphasis delimiter (default `*`).
+ */
 public object EmphasisRule : ConversionRule {
     override fun convert(element: KElement, context: ConversionContext): String {
         val content = context.processChildren(element)
@@ -44,7 +60,11 @@ public object EmphasisRule : ConversionRule {
     }
 }
 
-// 3. Strikethrough: <s>, <del>, <strike>
+/**
+ * Converts `<s>`, `<del>`, and `<strike>` tags to Markdown strikethrough text.
+ *
+ * Uses `~~` as the delimiter.
+ */
 public object StrikethroughRule : ConversionRule {
     override fun convert(element: KElement, context: ConversionContext): String {
         val content = context.processChildren(element)
@@ -52,7 +72,12 @@ public object StrikethroughRule : ConversionRule {
     }
 }
 
-// 4. Code: <code>
+/**
+ * Converts `<code>` tags to Markdown inline code.
+ *
+ * Wraps content in backticks (` ` `). Handles escaping of backticks inside the code by using double
+ * backticks if necessary.
+ */
 public object CodeRule : ConversionRule {
     override fun convert(element: KElement, context: ConversionContext): String {
         // Extract content raw (no escaping)
@@ -79,7 +104,11 @@ public object CodeRule : ConversionRule {
     }
 }
 
-// 5. Link: <a>
+/**
+ * Converts `<a>` tags to Markdown links.
+ *
+ * Format: `[text](href "title")`
+ */
 public object LinkRule : ConversionRule {
     override fun convert(element: KElement, context: ConversionContext): String {
         val content = context.processChildren(element)
@@ -93,7 +122,11 @@ public object LinkRule : ConversionRule {
     }
 }
 
-// 6. Image: <img>
+/**
+ * Converts `<img>` tags to Markdown images.
+ *
+ * Format: `![alt](src "title")`
+ */
 public object ImageRule : ConversionRule {
     override fun convert(element: KElement, context: ConversionContext): String {
         val src = element.attributes["src"] ?: ""

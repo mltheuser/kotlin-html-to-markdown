@@ -4,6 +4,12 @@ import com.mltheuser.khtmlmarkdown.ConversionContext
 import com.mltheuser.khtmlmarkdown.dom.KElement
 import com.mltheuser.khtmlmarkdown.dom.KTextNode
 
+/**
+ * Converts `<pre>` tags to Markdown fenced code blocks.
+ *
+ * Detects language from `class` attributes on a nested `<code>` element (e.g.,
+ * `class="language-kotlin"`). If no language is found, it defaults to a generic code block.
+ */
 public object PreCodeRule : ConversionRule {
     override fun convert(element: KElement, context: ConversionContext): String {
         // Check if <pre> has exactly one child that is <code> (ignoring whitespace text nodes)
@@ -21,6 +27,10 @@ public object PreCodeRule : ConversionRule {
         return convertToCodeBlock(element)
     }
 
+    /**
+     * Converts a generic `<pre>` block (without specific `<code>` child structure) to a fenced code
+     * block.
+     */
     private fun convertToCodeBlock(element: KElement): String {
         // Extract text content from the element (recursively)
         val sb = StringBuilder()
@@ -38,6 +48,10 @@ public object PreCodeRule : ConversionRule {
         return "\n\n```\n$content\n```\n\n"
     }
 
+    /**
+     * Converts a `<pre><code>...</code></pre>` block to a fenced code block with language syntax
+     * highlighting.
+     */
     private fun convertCodeBlock(codeElement: KElement): String {
         // Extract language
         var language = ""
