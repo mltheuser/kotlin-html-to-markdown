@@ -3,7 +3,7 @@ plugins {
     alias(libs.plugins.vanniktech.publish)
 }
 
-val version: String = "1.0.0"
+val version: String = "1.0.1"
 
 group = "io.github.mltheuser"
 
