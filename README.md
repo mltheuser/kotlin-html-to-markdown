@@ -4,7 +4,7 @@ A Kotlin Multiplatform library for converting HTML to Markdown.
 
 [![Maven Central](https://img.shields.io/maven-central/v/io.github.mltheuser/khtmltomarkdown)](https://central.sonatype.com/artifact/io.github.mltheuser/khtmltomarkdown)
 [![GitHub license](https://img.shields.io/github/license/mltheuser/kotlin-html-to-markdown)](https://github.com/mltheuser/kotlin-html-to-markdown/blob/main/LICENSE)
-[![Kotlin](https://img.shields.io/badge/kotlin-2.0.0-blue.svg?logo=kotlin)](http://kotlinlang.org)
+[![Kotlin](https://img.shields.io/badge/kotlin-2.2.20-blue.svg?logo=kotlin)](http://kotlinlang.org)
 [![Build Status](https://img.shields.io/github/actions/workflow/status/mltheuser/kotlin-html-to-markdown/publish.yml)](https://github.com/mltheuser/kotlin-html-to-markdown/actions)
 
 <!-- The "KMP" Flex Badge -->
